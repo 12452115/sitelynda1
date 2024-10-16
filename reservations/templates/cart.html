@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panier</title>
+    {% load custom_filters %}
+</head>
+<body>
+    <h1>Votre Panier</h1>
+
+    <!-- Vérifie si le panier contient des articles -->
+    {% if items %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Offre</th>
+                    <th>Quantité</th>
+                    <th>Prix</th>
+                    <th>Total</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                <tr>
+                    <td>{{ item.offer.name }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{{ item.offer.price }} €</td>
+                    <td>{{ item.offer.price|mul:item.quantity }} €</td>
+                    <td>
+                        <a href="{% url 'remove_from_cart' item.offer.id %}">Retirer</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Montant total du panier -->
+        <h2>Total : 
+            {% with total=0 %}
+                {% for item in items %}
+                    {% with total=total|add:item.offer.price|mul:item.quantity %}
+                    {% endwith %}
+                {% endfor %}
+                {{ total }} €
+            {% endwith %}
+        </h2>
+
+        <!-- Actions sur le panier -->
+        <a href="{% url 'clear_cart' %}" class="button">Vider le panier</a>
+        <a href="{% url 'checkout' items.0.offer.id %}" class="button">Passer à la caisse</a>
+
+    {% else %}
+        <p>Votre panier est vide.</p>
+        <a href="{% url 'home' %}" class="button">Continuer les achats</a>
+    {% endif %}
+
+</body>
+</html>
+

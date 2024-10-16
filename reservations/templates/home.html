@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accueil - Jeux Olympiques</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <style>
+    body {
+        background-size: cover;  
+        background-position: center;  
+        background-repeat: no-repeat;  
+        color: white;  
+    }
+    </style
+</head>
+<body>
+    <body style="background-image: url('{% static 'image/img.jpg' %}'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+    <header>
+        <h1>Bienvenue sur les Jeux Olympiques France</h1>
+        <nav>
+            <ul>
+                <li><a href="{% url 'home' %}">Accueil</a></li>
+                <li><a href="{% url 'view_cart' %}">Voir le panier</a></li>
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'logout' %}">Déconnexion</a></li>
+                {% else %}
+                    <li><a href="{% url 'login' %}">Connexion</a></li>
+                    <li><a href="{% url 'signup' %}">Inscription</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section>
+            <h2>Nos offres disponibles</h2>
+            <div class="offers-container">
+                {% for offer in offers %}
+                    <div class="offer-item">
+                        <h3>{{ offer.name }}</h3>
+                        <p>{{ offer.description }}</p>
+                        <p><strong>Prix :</strong> {{ offer.price }} €</p>
+                        <p><strong>Nombre de personnes :</strong> {{ offer.max_people }}</p>
+                        
+                        <!-- Vérifie si l'utilisateur est connecté avant d'autoriser l'ajout au panier -->
+                        {% if user.is_authenticated %}
+                            <form action="{% url 'add_to_cart' offer.id %}" method="POST">
+                                {% csrf_token %}
+                                <button type="submit">Ajouter au panier</button>
+                            </form>
+                        {% else %}
+                            <p><a href="{% url 'login' %}">Connectez-vous</a> pour ajouter au panier.</p>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Jeux Olympiques France</p>
+    </footer>
+</body>
+</html>
+

@@ -1,0 +1,19 @@
+<!-- reservations/templates/finalize_order.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Finalisation de la commande</title>
+</head>
+<body>
+    <h2>Finaliser la commande pour l'offre : {{ offer.name }}</h2>
+    <p>Description : {{ offer.description }}</p>
+    <p>Prix : {{ offer.price }} €</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Confirmer l'achat</button>
+    </form>
+</body>
+</html>
