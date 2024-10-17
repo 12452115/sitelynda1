@@ -1,2 +1,1 @@
-web: gunicorn olympics.wsgi
-
+web: gunicorn myproject.wsgi
